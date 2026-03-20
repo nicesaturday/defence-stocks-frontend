@@ -1,24 +1,61 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { navbarStyles, navItemStyles, authButtonStyles } from "@/ui/styles/navbarStyles";
+
+const NAV_ITEMS = [
+  { href: "/", label: "Home" },
+] as const;
 
 export default function Navbar() {
+  const pathname = usePathname();
+
+  // TODO: auth feature 연동 후 실제 인증 상태로 교체
+  const isAuthenticated = false;
+
   return (
-    <nav className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-zinc-200 bg-white px-6 dark:border-zinc-800 dark:bg-black">
-      <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+    <nav className={navbarStyles.nav}>
+      <Link href="/" className={navbarStyles.logo}>
         Defence Stocks
       </Link>
-      <div className="flex items-center gap-4">
-        <Link
-          href="/"
-          className="text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
-        >
-          Home
-        </Link>
-        <Link
-          href="/login"
-          className="text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
-        >
-          Login
-        </Link>
+
+      <div className={navbarStyles.menuGroup}>
+        {NAV_ITEMS.map(({ href, label }) => {
+          const isActive = pathname === href;
+
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`${navItemStyles.base} ${
+                isActive ? navItemStyles.active : navItemStyles.inactive
+              }`}
+            >
+              {label}
+            </Link>
+          );
+        })}
+
+        {isAuthenticated ? (
+          <button
+            type="button"
+            className={`${authButtonStyles.base} ${authButtonStyles.logout}`}
+          >
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className={`${authButtonStyles.base} ${
+              pathname === "/login"
+                ? authButtonStyles.loginActive
+                : authButtonStyles.loginInactive
+            }`}
+          >
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );
