@@ -6,15 +6,23 @@ import { termGroupStyles } from "@/ui/styles/termsPageStyles";
 
 interface TermGroupItemProps {
   termGroup: TermGroup;
+  checked: boolean;
+  onToggle: () => void;
 }
 
-export default function TermGroupItem({ termGroup }: TermGroupItemProps) {
+export default function TermGroupItem({ termGroup, checked, onToggle }: TermGroupItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <div className={termGroupStyles.container}>
       <div className={termGroupStyles.header}>
-        <div className={termGroupStyles.nameRow}>
+        <label className={termGroupStyles.checkboxLabel}>
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={onToggle}
+            className={termGroupStyles.checkbox}
+          />
           <span className={termGroupStyles.name}>{termGroup.name}</span>
           <span
             className={
@@ -25,7 +33,7 @@ export default function TermGroupItem({ termGroup }: TermGroupItemProps) {
           >
             {termGroup.required ? "필수" : "선택"}
           </span>
-        </div>
+        </label>
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
