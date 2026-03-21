@@ -12,6 +12,8 @@ export const boardPageStyles = {
       "inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-400",
     badgeDot:
       "h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse",
+    createButton:
+      "inline-flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-500/25 transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500",
   },
   loading:
     "flex min-h-[400px] items-center justify-center text-sm text-zinc-400 dark:text-zinc-500",
