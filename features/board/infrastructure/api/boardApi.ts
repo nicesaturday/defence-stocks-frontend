@@ -7,7 +7,7 @@ interface BoardPostResponse {
   readonly board_id: number;
   readonly title: string;
   readonly content: string;
-  readonly account_id: number;
+  readonly nickname: string;
   readonly created_at: string;
   readonly updated_at: string;
 }
@@ -16,7 +16,7 @@ interface BoardPostDetailResponse {
   readonly board_id: number;
   readonly title: string;
   readonly content: string;
-  readonly account_id: number;
+  readonly nickname: string;
   readonly created_at: string;
   readonly updated_at: string;
 }
@@ -38,7 +38,7 @@ export const boardApi = {
       posts: response.items.map((item) => ({
         id: item.board_id,
         title: item.title,
-        nickname: `사용자${item.account_id}`,
+        nickname: item.nickname,
         createdAt: item.created_at.slice(0, 10),
         viewCount: 0,
       })),
@@ -63,7 +63,7 @@ export const boardApi = {
         id: response.board_id,
         title: response.title,
         content: response.content,
-        nickname: `사용자${response.account_id}`,
+        nickname: response.nickname,
         createdAt: response.created_at.slice(0, 10),
         viewCount: 0,
       };
