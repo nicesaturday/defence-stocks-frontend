@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { authApi } from "@/features/auth/infrastructure/api/authApi";
 import { getTerms } from "@/features/terms/domain/model/getTerms";
 import TermGroupItem from "@/features/terms/ui/components/TermGroupItem";
@@ -11,6 +11,25 @@ export default function TermsPage() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const terms = getTerms();
+
+  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(terms.map((t) => [t.name, false])),
+  );
+
+  const allChecked = terms.every((t) => checkedMap[t.name]);
+  const requiredAllChecked = useMemo(
+    () => terms.filter((t) => t.required).every((t) => checkedMap[t.name]),
+    [terms, checkedMap],
+  );
+
+  const handleToggle = (name: string) => {
+    setCheckedMap((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const handleToggleAll = () => {
+    const next = !allChecked;
+    setCheckedMap(Object.fromEntries(terms.map((t) => [t.name, next])));
+  };
 
   useEffect(() => {
     authApi
@@ -40,11 +59,39 @@ export default function TermsPage() {
             서비스 이용을 위해 약관에 동의해주세요
           </p>
         </div>
+
         <div className={termsPageStyles.termList}>
+          <label className={termsPageStyles.allAgreeRow}>
+            <input
+              type="checkbox"
+              checked={allChecked}
+              onChange={handleToggleAll}
+              className={termsPageStyles.allAgreeCheckbox}
+            />
+            <span className={termsPageStyles.allAgreeLabel}>전체 동의</span>
+          </label>
+
           {terms.map((termGroup) => (
-            <TermGroupItem key={termGroup.name} termGroup={termGroup} />
+            <TermGroupItem
+              key={termGroup.name}
+              termGroup={termGroup}
+              checked={checkedMap[termGroup.name]}
+              onToggle={() => handleToggle(termGroup.name)}
+            />
           ))}
         </div>
+
+        <button
+          type="button"
+          disabled={!requiredAllChecked}
+          className={
+            requiredAllChecked
+              ? termsPageStyles.submitButton
+              : termsPageStyles.submitButtonDisabled
+          }
+        >
+          동의하고 계속하기
+        </button>
       </div>
     </div>
   );

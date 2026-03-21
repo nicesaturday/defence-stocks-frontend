@@ -4,11 +4,18 @@ export const termsPageStyles = {
   title: "text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50",
   description: "text-sm text-zinc-500 dark:text-zinc-400",
   termList: "flex w-full flex-col gap-4",
+  allAgreeRow: "flex w-full items-center gap-2 rounded-md border border-zinc-300 px-4 py-3 dark:border-zinc-600",
+  allAgreeCheckbox: "h-4 w-4 accent-zinc-900 dark:accent-zinc-50",
+  allAgreeLabel: "text-sm font-semibold text-zinc-900 dark:text-zinc-50",
+  submitButton: "w-full rounded-md bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200",
+  submitButtonDisabled: "w-full rounded-md bg-zinc-300 px-4 py-3 text-sm font-semibold text-zinc-500 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-500",
 } as const;
 
 export const termGroupStyles = {
   container: "w-full rounded-md border border-zinc-200 dark:border-zinc-700",
   header: "flex items-center justify-between px-4 py-3",
+  checkboxLabel: "flex items-center gap-2 cursor-pointer",
+  checkbox: "h-4 w-4 accent-zinc-900 dark:accent-zinc-50",
   nameRow: "flex items-center gap-2",
   name: "text-sm font-semibold text-zinc-900 dark:text-zinc-50",
   requiredBadge: "rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300",
