@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { authApi } from "@/features/auth/infrastructure/api/authApi";
 import { getTerms } from "@/features/terms/domain/model/getTerms";
+import { termsStorage } from "@/features/terms/infrastructure/storage/termsStorage";
 import TermGroupItem from "@/features/terms/ui/components/TermGroupItem";
 import { termsPageStyles } from "@/ui/styles/termsPageStyles";
 
@@ -29,6 +30,15 @@ export default function TermsPage() {
   const handleToggleAll = () => {
     const next = !allChecked;
     setCheckedMap(Object.fromEntries(terms.map((t) => [t.name, next])));
+  };
+
+  const handleSubmit = () => {
+    const agreements = terms.map((t) => ({
+      name: t.name,
+      agreed: checkedMap[t.name],
+    }));
+    termsStorage.save(agreements);
+    router.push("/account/signup");
   };
 
   useEffect(() => {
@@ -84,6 +94,7 @@ export default function TermsPage() {
         <button
           type="button"
           disabled={!requiredAllChecked}
+          onClick={handleSubmit}
           className={
             requiredAllChecked
               ? termsPageStyles.submitButton
