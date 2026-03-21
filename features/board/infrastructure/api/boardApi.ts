@@ -4,26 +4,28 @@ import type { BoardPostDetail } from "@/features/board/domain/model/boardPostDet
 import type { CreatePostRequest } from "@/features/board/domain/model/createPostRequest";
 
 interface BoardPostResponse {
-  readonly id: number;
+  readonly board_id: number;
   readonly title: string;
-  readonly nickname: string;
+  readonly content: string;
+  readonly account_id: number;
   readonly created_at: string;
-  readonly view_count: number;
+  readonly updated_at: string;
 }
 
 interface BoardPostDetailResponse {
-  readonly id: number;
+  readonly board_id: number;
   readonly title: string;
   readonly content: string;
-  readonly nickname: string;
+  readonly account_id: number;
   readonly created_at: string;
-  readonly view_count: number;
+  readonly updated_at: string;
 }
 
 interface BoardListResponse {
-  readonly posts: readonly BoardPostResponse[];
-  readonly total_pages: number;
+  readonly items: readonly BoardPostResponse[];
   readonly current_page: number;
+  readonly total_pages: number;
+  readonly total_count: number;
 }
 
 export const boardApi = {
@@ -33,12 +35,12 @@ export const boardApi = {
     );
 
     return {
-      posts: response.posts.map((post) => ({
-        id: post.id,
-        title: post.title,
-        nickname: post.nickname,
-        createdAt: post.created_at,
-        viewCount: post.view_count,
+      posts: response.items.map((item) => ({
+        id: item.board_id,
+        title: item.title,
+        nickname: `사용자${item.account_id}`,
+        createdAt: item.created_at.slice(0, 10),
+        viewCount: 0,
       })),
       totalPages: response.total_pages,
       currentPage: response.current_page,
@@ -58,12 +60,12 @@ export const boardApi = {
         `/board/read/${id}`,
       );
       return {
-        id: response.id,
+        id: response.board_id,
         title: response.title,
         content: response.content,
-        nickname: response.nickname,
-        createdAt: response.created_at,
-        viewCount: response.view_count,
+        nickname: `사용자${response.account_id}`,
+        createdAt: response.created_at.slice(0, 10),
+        viewCount: 0,
       };
     } catch (error) {
       if (error instanceof HttpError && error.status === 404) {
