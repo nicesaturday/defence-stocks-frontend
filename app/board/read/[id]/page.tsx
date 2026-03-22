@@ -7,10 +7,11 @@ import {
   isAuthLoadingAtom,
 } from "@/features/auth/application/selectors/authSelectors";
 import { usePostDetail } from "@/features/board/application/hooks/usePostDetail";
+import { boardApi } from "@/features/board/infrastructure/api/boardApi";
 import { boardReadPageStyles as s } from "@/ui/styles/boardReadPageStyles";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function BoardReadPage() {
   const router = useRouter();
@@ -19,6 +20,18 @@ export default function BoardReadPage() {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const isAuthLoading = useAtomValue(isAuthLoadingAtom);
   const state = usePostDetail(id);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleDelete = useCallback(async () => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      await boardApi.deletePost(id);
+      router.push("/board");
+    } catch {
+      setDeleteError("게시물 삭제에 실패했습니다.");
+    }
+  }, [id, router]);
 
   useEffect(() => {
     if (!isAuthLoading && !isAuthenticated) {
@@ -69,6 +82,12 @@ export default function BoardReadPage() {
               <div className={s.article.body}>{state.data.content}</div>
             </article>
 
+            {deleteError && (
+              <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/30 dark:text-red-400">
+                {deleteError}
+              </div>
+            )}
+
             <div className={s.actions}>
               <Link href="/board" className={s.listButton}>
                 목록으로
@@ -80,7 +99,11 @@ export default function BoardReadPage() {
                 >
                   수정
                 </Link>
-                <button type="button" className={s.deleteButton}>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className={s.deleteButton}
+                >
                   삭제
                 </button>
               </div>

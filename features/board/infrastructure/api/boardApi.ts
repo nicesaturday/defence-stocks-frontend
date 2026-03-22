@@ -83,4 +83,7 @@ export const boardApi = {
     );
     return response.board_id;
   },
+  async deletePost(boardId: number): Promise<void> {
+    await httpClient.delete(`/board/delete/${boardId}`);
+  },
 } as const;
